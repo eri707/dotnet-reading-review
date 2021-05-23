@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
+using System.Linq;
 
 namespace dotnet_file_reading_review
 {
@@ -28,8 +29,20 @@ namespace dotnet_file_reading_review
                     var jsonString = r.ReadToEnd();
                     // cars is a list of objects
                     var cars = JsonSerializer.Deserialize<List<Car>>(jsonString, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-                    // serialize is json string
-                    var serialize = JsonSerializer.Serialize(cars, new JsonSerializerOptions { WriteIndented = true });
+                    //Dictionary stores key-value pairs(empty object)
+                    var carHash = new Dictionary<string, int>();
+                    foreach(var i in cars)
+                    {
+                        if (carHash.ContainsKey(i.Make))
+                        {
+                            carHash[i.Make]++;
+                        }
+                        else 
+                        {
+                            carHash[i.Make] = 1;
+                        }
+                    }// serialize is json string(to print it out)
+                     var serialize = JsonSerializer.Serialize(carHash, new JsonSerializerOptions { WriteIndented = true });
                     Console.WriteLine(serialize);
                 }
             }
